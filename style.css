@@ -12,19 +12,102 @@ body {
     color: var(--text-main);
     font-family: 'Roboto Condensed', sans-serif;
     margin: 0;
-    padding: 20px;
+    padding: 0;
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
 }
 
 header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: var(--bg-main);
+    z-index: 100;
     text-align: center;
-    margin-bottom: 30px;
     border-bottom: 2px solid var(--accent-gold);
-    padding-bottom: 10px;
+    padding: 10px 0;
 }
 
-h1 {
+header h1 {
     font-family: 'Cinzel', serif;
     color: var(--accent-gold);
+    margin: 5px 0;
+}
+
+/* Вкладки */
+.tabs {
+    margin-top: 10px;
+}
+
+.tab-btn {
+    background: var(--bg-panel);
+    color: var(--text-main);
+    border: 1px solid var(--text-muted);
+    padding: 8px 15px;
+    margin: 0 5px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.tab-btn.active {
+    background: var(--accent-gold);
+    color: #181a20;
+    border-color: var(--accent-gold);
+    font-weight: bold;
+}
+
+/* Боковая панель */
+.sidebar {
+    width: 200px;
+    background: var(--bg-panel);
+    padding: 80px 15px 20px 15px;
+    border-right: 2px solid var(--accent-gold);
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+.sidebar h3 {
+    color: var(--accent-gold);
+    border-bottom: 1px solid var(--text-muted);
+    padding-bottom: 5px;
+}
+
+.sidebar button {
+    width: 100%;
+    background: #2c303b;
+    color: var(--text-main);
+    border: 1px solid #4a4f5e;
+    padding: 8px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    border-radius: 4px;
+    text-align: left;
+}
+
+.sidebar button:hover {
+    background: #3a3f4d;
+}
+
+.sidebar button.active {
+    background: var(--accent-gold);
+    color: #181a20;
+}
+
+/* Основной контент */
+main {
+    flex: 1;
+    padding: 80px 20px 20px 20px;
+    overflow-y: auto;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
 }
 
 h2 {
@@ -61,6 +144,23 @@ input, select {
     box-sizing: border-box;
 }
 
+.item-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.item-row label {
+    flex: 1;
+}
+
+.item-row input {
+    width: 60px;
+    text-align: center;
+    margin: 0;
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
@@ -73,12 +173,6 @@ th, td {
     text-align: center;
 }
 
-/* Стили для ползунков */
-input[type="range"] {
-    padding: 0;
-    accent-color: var(--accent-red);
-}
-
 .calc-info {
     background: rgba(212, 175, 55, 0.1);
     padding: 10px;
@@ -86,8 +180,56 @@ input[type="range"] {
     margin: 10px 0;
 }
 
+/* Броски кубиков */
+.dice-builder {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.roll-btn {
+    background: var(--accent-red);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.dice-output {
+    margin-top: 20px;
+    background: #181a20;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.dice-output .pool-info {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+}
+
+.dice-output .results {
+    font-size: 1.5rem;
+    letter-spacing: 4px;
+    margin-bottom: 10px;
+}
+
+/* Справочник */
+.lore-content {
+    max-width: 800px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+.lore-content h3 {
+    color: var(--accent-gold);
+}
+
 /* Адаптивность */
-@media (max-width: 900px) {
+@media (max-width: 1200px) {
     .grid-container {
         grid-template-columns: 1fr;
     }
