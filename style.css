@@ -62,7 +62,7 @@ header h1 {
 .sidebar {
     width: 200px;
     background: var(--bg-panel);
-    padding: 80px 15px 20px 15px;
+    padding: 150px 15px 20px 15px; /* Увеличили верхний отступ до 150px */
     border-right: 2px solid var(--accent-gold);
     box-sizing: border-box;
     overflow-y: auto;
@@ -98,8 +98,9 @@ header h1 {
 /* Основной контент */
 main {
     flex: 1;
-    padding: 80px 20px 20px 20px;
+    padding: 150px 20px 20px 20px; /* Увеличили верхний отступ до 150px */
     overflow-y: auto;
+    box-sizing: border-box;
 }
 
 .tab-content {
