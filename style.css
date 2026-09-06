@@ -1,0 +1,94 @@
+:root {
+    --bg-main: #181a20;
+    --bg-panel: #232631;
+    --text-main: #e0e6ed;
+    --text-muted: #a0aab8;
+    --accent-gold: #d4af37;
+    --accent-red: #a83a3a;
+}
+
+body {
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    font-family: 'Roboto Condensed', sans-serif;
+    margin: 0;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 30px;
+    border-bottom: 2px solid var(--accent-gold);
+    padding-bottom: 10px;
+}
+
+h1 {
+    font-family: 'Cinzel', serif;
+    color: var(--accent-gold);
+}
+
+h2 {
+    font-family: 'Cinzel', serif;
+    font-size: 1.2rem;
+    border-bottom: 1px solid var(--text-muted);
+    padding-bottom: 5px;
+    margin-top: 20px;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.panel {
+    background-color: var(--bg-panel);
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+input, select {
+    background: #2c303b;
+    border: 1px solid #4a4f5e;
+    color: var(--text-main);
+    padding: 8px;
+    border-radius: 4px;
+    width: 100%;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+th, td {
+    border: 1px solid #444;
+    padding: 5px;
+    text-align: center;
+}
+
+/* Стили для ползунков */
+input[type="range"] {
+    padding: 0;
+    accent-color: var(--accent-red);
+}
+
+.calc-info {
+    background: rgba(212, 175, 55, 0.1);
+    padding: 10px;
+    border-left: 3px solid var(--accent-gold);
+    margin: 10px 0;
+}
+
+/* Адаптивность */
+@media (max-width: 900px) {
+    .grid-container {
+        grid-template-columns: 1fr;
+    }
+}
