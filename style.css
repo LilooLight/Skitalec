@@ -13,18 +13,16 @@ body {
     font-family: 'Roboto Condensed', sans-serif;
     margin: 0;
     padding: 0;
-    display: flex;
+    box-sizing: border-box;
     height: 100vh;
     overflow: hidden;
 }
 
 header {
-    position: absolute;
+    position: sticky;
     top: 0;
-    left: 0;
-    right: 0;
+    z-index: 1000;
     background: var(--bg-main);
-    z-index: 100;
     text-align: center;
     border-bottom: 2px solid var(--accent-gold);
     padding: 10px 0;
@@ -58,11 +56,11 @@ header h1 {
     font-weight: bold;
 }
 
-/* Боковая панель */
+/* Боковая панель - исправлен верхний отступ */
 .sidebar {
     width: 200px;
     background: var(--bg-panel);
-    padding: 150px 15px 20px 15px; /* Увеличили верхний отступ до 150px */
+    padding: 150px 15px 20px 15px; 
     border-right: 2px solid var(--accent-gold);
     box-sizing: border-box;
     overflow-y: auto;
@@ -72,166 +70,38 @@ header h1 {
     color: var(--accent-gold);
     border-bottom: 1px solid var(--text-muted);
     padding-bottom: 5px;
+    margin-top: 0; 
 }
 
-.sidebar button {
-    width: 100%;
-    background: #2c303b;
-    color: var(--text-main);
-    border: 1px solid #4a4f5e;
-    padding: 8px;
-    margin-bottom: 8px;
-    cursor: pointer;
-    border-radius: 4px;
-    text-align: left;
-}
-
-.sidebar button:hover {
-    background: #3a3f4d;
-}
-
-.sidebar button.active {
-    background: var(--accent-gold);
-    color: #181a20;
-}
-
-/* Основной контент */
+/* Основной контент - исправлен верхний отступ */
 main {
     flex: 1;
-    padding: 150px 20px 20px 20px; /* Увеличили верхний отступ до 150px */
+    padding: 150px 20px 20px 20px; 
     overflow-y: auto;
     box-sizing: border-box;
 }
 
-.tab-content {
-    display: none;
-}
+/* Остальные стили остаются такими же... */
+h2 { font-family: 'Cinzel', serif; font-size: 1.2rem; border-bottom: 1px solid var(--text-muted); padding-bottom: 5px; margin-top: 20px; }
+.grid-container { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; max-width: 1200px; margin: 0 auto; }
+.panel { background-color: var(--bg-panel); padding: 15px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); }
+input, select { background: #2c303b; border: 1px solid #4a4f5e; color: var(--text-main); padding: 8px; border-radius: 4px; width: 100%; margin-bottom: 10px; box-sizing: border-box; }
+.item-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+.item-row label { flex: 1; }
+.item-row input { width: 60px; text-align: center; margin: 0; }
+table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+th, td { border: 1px solid #444; padding: 5px; text-align: center; }
+.calc-info { background: rgba(212, 175, 55, 0.1); padding: 10px; border-left: 3px solid var(--accent-gold); margin: 10px 0; }
+.dice-builder { max-width: 400px; margin: 0 auto; }
+.roll-btn { background: var(--accent-red); color: white; border: none; padding: 10px 20px; font-size: 1.2rem; cursor: pointer; border-radius: 5px; width: 100%; margin-top: 20px; }
+.dice-output { margin-top: 20px; background: #181a20; padding: 20px; border-radius: 8px; text-align: center; }
+.lore-content { max-width: 800px; margin: 0 auto; line-height: 1.6; }
+.lore-content h3 { color: var(--accent-gold); }
 
-.tab-content.active {
-    display: block;
-}
-
-h2 {
-    font-family: 'Cinzel', serif;
-    font-size: 1.2rem;
-    border-bottom: 1px solid var(--text-muted);
-    padding-bottom: 5px;
-    margin-top: 20px;
-}
-
-.grid-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-.panel {
-    background-color: var(--bg-panel);
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-}
-
-input, select {
-    background: #2c303b;
-    border: 1px solid #4a4f5e;
-    color: var(--text-main);
-    padding: 8px;
-    border-radius: 4px;
-    width: 100%;
-    margin-bottom: 10px;
-    box-sizing: border-box;
-}
-
-.item-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 5px;
-}
-
-.item-row label {
-    flex: 1;
-}
-
-.item-row input {
-    width: 60px;
-    text-align: center;
-    margin: 0;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.9rem;
-}
-
-th, td {
-    border: 1px solid #444;
-    padding: 5px;
-    text-align: center;
-}
-
-.calc-info {
-    background: rgba(212, 175, 55, 0.1);
-    padding: 10px;
-    border-left: 3px solid var(--accent-gold);
-    margin: 10px 0;
-}
-
-/* Броски кубиков */
-.dice-builder {
-    max-width: 400px;
-    margin: 0 auto;
-}
-
-.roll-btn {
-    background: var(--accent-red);
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    font-size: 1.2rem;
-    cursor: pointer;
-    border-radius: 5px;
-    width: 100%;
-    margin-top: 20px;
-}
-
-.dice-output {
-    margin-top: 20px;
-    background: #181a20;
-    padding: 20px;
-    border-radius: 8px;
-    text-align: center;
-}
-
-.dice-output .pool-info {
-    font-size: 1.1rem;
-    margin-bottom: 10px;
-}
-
-.dice-output .results {
-    font-size: 1.5rem;
-    letter-spacing: 4px;
-    margin-bottom: 10px;
-}
-
-/* Справочник */
-.lore-content {
-    max-width: 800px;
-    margin: 0 auto;
-    line-height: 1.6;
-}
-
-.lore-content h3 {
-    color: var(--accent-gold);
-}
+/* Стили для кнопок в сайдбаре */
+.sidebar button { width: 100%; background: #2c303b; color: var(--text-main); border: 1px solid #4a4f5e; padding: 8px; margin-bottom: 8px; cursor: pointer; border-radius: 4px; text-align: left; }
+.sidebar button:hover { background: #3a3f4d; }
+.sidebar button.active { background: var(--accent-gold); color: #181a20; }
 
 /* Адаптивность */
-@media (max-width: 1200px) {
-    .grid-container {
-        grid-template-columns: 1fr;
-    }
-}
+@media (max-width: 1200px) { .grid-container { grid-template-columns: 1fr; } }
