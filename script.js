@@ -4,15 +4,26 @@ const skillsData = ["Атлетика", "Бдительность", "Выжив�
 const bodyParts = ["Всего", "Торс", "Голова", "Л. Рука", "П. Рука", "Л. Нога", "П. Нога"];
 
 // --- УПРАВЛЕНИЕ ПЕРСОНАЖАМИ ---
-let characters = JSON.parse(localStorage.getItem('skitalets_chars')) || [];
-let currentCharId = localStorage.getItem('skitalets_current') || null;
+// Исправление: при загрузке используем безопасный парсинг, и если данные старые, создаем новых
+let characters = [];
+try {
+    const stored = JSON.parse(localStorage.getItem('skitalets_chars'));
+    // Проверяем массив ли это
+    if (Array.isArray(stored)) {
+        characters = stored;
+    }
+} catch (e) {
+    characters = [];
+}
+
+let currentCharId = localStorage.getItem('skitalets_current');
 
 function saveAll() {
     localStorage.setItem('skitalets_chars', JSON.stringify(characters));
     localStorage.setItem('skitalets_current', currentCharId);
 }
 
-function addCharacter() {
+function generateEmptyChar() {
     const newChar = {
         id: Date.now(),
         name: "Новый Скиталец",
@@ -25,7 +36,11 @@ function addCharacter() {
     qualitiesData.forEach(q => newChar.qualities[q] = 0);
     skillsData.forEach(s => newChar.skills[s] = 0);
     bodyParts.forEach(b => newChar.wounds[b] = { light: 0, heavy: 0 });
+    return newChar;
+}
 
+function addCharacter() {
+    const newChar = generateEmptyChar();
     characters.push(newChar);
     currentCharId = newChar.id;
     saveAll();
@@ -35,12 +50,9 @@ function addCharacter() {
 
 function deleteCharacter(id) {
     characters = characters.filter(c => c.id !== id);
-    
-    // Исправление: если удалили текущего персонажа, переключаемся на первого оставшегося
     if(currentCharId === id) {
         currentCharId = characters.length > 0 ? characters[0].id : null;
     }
-    
     saveAll();
     renderSidebar();
     renderSheet();
@@ -75,20 +87,23 @@ function getCurrentChar() {
 function renderSheet() {
     const char = getCurrentChar();
     
-    // Если персонаж не найден, показываем заглушку
     if (!char) {
         document.getElementById('sheet').innerHTML = '<p style="text-align:center; padding: 50px;">Создайте нового персонажа слева.</p>';
         return;
     }
 
-    // Рендерим Качества
+    // Рендерим Качества (с защитой от отсутствия данных)
     const qContainer = document.getElementById('qualities-list');
     qContainer.innerHTML = '';
     qualitiesData.forEach(q => {
+        // Исправление: если данных нет, берем 0
+        let val = 0;
+        if (char.qualities && char.qualities[q] !== undefined) val = char.qualities[q]; 
+        
         qContainer.innerHTML += `
             <div class="item-row">
                 <label>${q}</label>
-                <input type="number" min="-2" max="10" value="${char.qualities[q]}" onchange="updateCharData('qualities', '${q}', this.value)">
+                <input type="number" min="-2" max="10" value="${val}" onchange="updateCharData('qualities', '${q}', this.value)">
             </div>`;
     });
 
@@ -96,10 +111,13 @@ function renderSheet() {
     const sContainer = document.getElementById('skills-list');
     sContainer.innerHTML = '';
     skillsData.forEach(s => {
+        let val = 0;
+        if (char.skills && char.skills[s] !== undefined) val = char.skills[s];
+
         sContainer.innerHTML += `
             <div class="item-row">
                 <label>${s}</label>
-                <input type="number" min="0" max="5" value="${char.skills[s]}" onchange="updateCharData('skills', '${s}', this.value)">
+                <input type="number" min="0" max="5" value="${val}" onchange="updateCharData('skills', '${s}', this.value)">
             </div>`;
     });
 
@@ -117,14 +135,20 @@ function renderSheet() {
     const tbody = document.getElementById('wounds-body');
     tbody.innerHTML = '';
     bodyParts.forEach(part => {
-        const wounds = char.wounds[part];
+        let light = 0;
+        let heavy = 0;
+        if (char.wounds && char.wounds[part]) {
+            light = char.wounds[part].light || 0;
+            heavy = char.wounds[part].heavy || 0;
+        }
+        
         tbody.innerHTML += `
             <tr>
                 <td>${part}</td>
                 <td><input type="text" value="0 / 0" style="width: 50px;"></td>
-                <td><input type="number" class="wound-light" value="${wounds.light}" style="width: 40px;" onchange="updateWounds('${part}', 'light', this.value)"></td>
-                <td><input type="number" class="wound-heavy" value="${wounds.heavy}" style="width: 40px;" onchange="updateWounds('${part}', 'heavy', this.value)"></td>
-                <td class="sum-cell">${wounds.light + wounds.heavy}</td>
+                <td><input type="number" value="${light}" style="width: 40px;" onchange="updateWounds('${part}', 'light', this.value)"></td>
+                <td><input type="number" value="${heavy}" style="width: 40px;" onchange="updateWounds('${part}', 'heavy', this.value)"></td>
+                <td class="sum-cell">${light + heavy}</td>
             </tr>`;
     });
 
@@ -137,16 +161,17 @@ function updateCharData(type, key, value) {
     if (char) {
         char[type][key] = parseInt(value) || 0;
         saveAll();
-        renderSheet(); // Перерисовка для обновления расчетов
+        renderSheet();
     }
 }
 
 function updateWounds(part, type, value) {
     const char = getCurrentChar();
     if (char) {
+        if (!char.wounds[part]) char.wounds[part] = { light: 0, heavy: 0 };
         char.wounds[part][type] = parseInt(value) || 0;
         saveAll();
-        renderSheet(); 
+        renderSheet();
     }
 }
 
@@ -208,7 +233,7 @@ function importCharacter(event) {
         }
     };
     reader.readAsText(file);
-    event.target.value = ''; // Сброс input
+    event.target.value = ''; 
 }
 
 // --- БРОСОК КУБИКОВ ---
@@ -238,9 +263,8 @@ function rollDice() {
     const difficulty = parseInt(document.getElementById('dice-diff').value) || 6;
 
     let poolSize = extraDice;
-
-    if (qKey !== "0") poolSize += char.qualities[qKey];
-    if (sKey !== "0") poolSize += char.skills[sKey];
+    if (qKey !== "0") poolSize += (char.qualities[qKey] || 0);
+    if (sKey !== "0") poolSize += (char.skills[sKey] || 0);
 
     if (poolSize <= 0) {
         document.getElementById('dice-results').innerHTML = '<p style="color:red;">Выберите качество/навык или добавьте кубы вручную.</p>';
@@ -289,7 +313,7 @@ function openTab(tabId) {
 
 // --- ЗАПУСК ---
 window.onload = () => {
-    // Исправление: проверяем, существует ли текущий ID, если нет - берем первого
+    // Проверяем, существует ли текущий ID в массиве
     if (characters.length > 0) {
         const exists = characters.find(c => c.id === currentCharId);
         if (!exists) {
