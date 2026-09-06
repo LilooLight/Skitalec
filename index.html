@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Скиталец — Лист персонажа</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Roboto+Condensed:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h1>СКИТАЛЕЦ. ОЖИВШИЕ КОШМАРЫ</h1>
+        <div class="hero-info">
+            <input type="text" placeholder="Имя персонажа" id="char-name">
+            <input type="text" placeholder="Типаж (Порок)">
+            <input type="text" placeholder="Образ / Суть">
+        </div>
+    </header>
+
+    <main class="grid-container">
+        <!-- Левая колонка -->
+        <section class="panel">
+            <h2>Качества</h2>
+            <div id="qualities-list"></div>
+            
+            <h2>Навыки и Знания</h2>
+            <div id="skills-list"></div>
+        </section>
+
+        <!-- Центральная колонка -->
+        <section class="panel">
+            <h2>Добродетели</h2>
+            <div id="virtues-list"></div>
+            
+            <div class="calc-info">
+                <label>Праведность (Расчет): <span id="righteousness">0</span></label>
+                <label>Стрессоустойчивость (Расчет): <span id="stress-resist">0</span></label>
+            </div>
+
+            <h2>Проклятые Силы</h2>
+            <select id="powers">
+                <option value="none">-- Выберите силу --</option>
+                <option value="beast">Звериная Сила</option>
+                <option value="night">Плач Ночницы</option>
+                <option value="stone">Каменная Плоть</option>
+            </select>
+            <div id="power-desc"></div>
+        </section>
+
+        <!-- Правая колонка -->
+        <section class="panel">
+            <h2>Здоровье и Раны</h2>
+            <table id="wounds-table">
+                <thead>
+                    <tr>
+                        <th>Часть тела</th>
+                        <th>Защита (Л/Т)</th>
+                        <th>Легкие</th>
+                        <th>Тяжелые</th>
+                        <th>Сумма</th>
+                    </tr>
+                </thead>
+                <tbody id="wounds-body">
+                    <!-- Заполняется через JS -->
+                </tbody>
+            </table>
+
+            <h2>Ресурсы</h2>
+            <div class="bars">
+                <label>Человечность: <input type="range" id="humanity" min="0" max="10"></label>
+                <label>Стресс: <input type="range" id="stress" min="0" max="10"></label>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
