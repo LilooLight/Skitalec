@@ -92,10 +92,10 @@ window.onload = () => {
 };
 function calculateVirtues() {
     // Считываем значения из полей ввода
-    const conscience = parseInt(document.getElementById('q-Совесть').value) || 0;
-    const selfControl = parseInt(document.getElementById('q-Самоконтроль').value) || 0;
-    const coldBlood = parseInt(document.getElementById('q-Хладнокровие').value) || 0;
-    const courage = parseInt(document.getElementById('q-Смелость').value) || 0;
+    const conscience = parseInt(document.getElementById('virtue-conscience').value) || 0;
+    const selfControl = parseInt(document.getElementById('virtue-self-control').value) || 0;
+    const coldBlood = parseInt(document.getElementById('virtue-cold-blood').value) || 0;
+    const courage = parseInt(document.getElementById('virtue-courage').value) || 0;
 
     const righteousness = (conscience + selfControl) + 2;
     const stressResist = (coldBlood + courage) + 2;
