@@ -90,3 +90,16 @@ window.onload = () => {
     renderWoundsTable();
     calculateVirtues();
 };
+function calculateVirtues() {
+    // Считываем значения из полей ввода
+    const conscience = parseInt(document.getElementById('q-Совесть').value) || 0;
+    const selfControl = parseInt(document.getElementById('q-Самоконтроль').value) || 0;
+    const coldBlood = parseInt(document.getElementById('q-Хладнокровие').value) || 0;
+    const courage = parseInt(document.getElementById('q-Смелость').value) || 0;
+
+    const righteousness = (conscience + selfControl) + 2;
+    const stressResist = (coldBlood + courage) + 2;
+
+    document.getElementById('righteousness').innerText = righteousness;
+    document.getElementById('stress-resist').innerText = stressResist;
+}
