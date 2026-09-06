@@ -29,8 +29,23 @@
 
         <!-- Центральная колонка -->
         <section class="panel">
-            <h2>Добродетели</h2>
-            <div id="virtues-list"></div>
+        <h2>Добродетели</h2>
+        <div class="item-row">
+            <label>Совесть</label>
+            <input type="number" id="virtue-conscience" min="0" max="5" value="2" oninput="calculateVirtues()">
+        </div>
+        <div class="item-row">
+            <label>Хладнокровие</label>
+            <input type="number" id="virtue-cold-blood" min="0" max="5" value="2" oninput="calculateVirtues()">
+        </div>
+        <div class="item-row">
+            <label>Самоконтроль</label>
+            <input type="number" id="virtue-self-control" min="0" max="5" value="2" oninput="calculateVirtues()">
+        </div>
+        <div class="item-row">
+            <label>Смелость</label>
+            <input type="number" id="virtue-courage" min="0" max="5" value="2" oninput="calculateVirtues()">
+        </div>
             
             <div class="calc-info">
                 <label>Праведность (Расчет): <span id="righteousness">0</span></label>
