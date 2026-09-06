@@ -10,82 +10,147 @@
 <body>
     <header>
         <h1>СКИТАЛЕЦ. ОЖИВШИЕ КОШМАРЫ</h1>
-        <div class="hero-info">
-            <input type="text" placeholder="Имя персонажа" id="char-name">
-            <input type="text" placeholder="Типаж (Порок)">
-            <input type="text" placeholder="Образ / Суть">
+        <div class="tabs">
+            <button class="tab-btn active" onclick="openTab('sheet')">Лист Персонажа</button>
+            <button class="tab-btn" onclick="openTab('dice')">Бросок Кубиков</button>
+            <button class="tab-btn" onclick="openTab('lore')">Справочник</button>
         </div>
     </header>
 
-    <main class="grid-container">
-        <!-- Левая колонка -->
-        <section class="panel">
-            <h2>Качества</h2>
-            <div id="qualities-list"></div>
-            
-            <h2>Навыки и Знания</h2>
-            <div id="skills-list"></div>
-        </section>
+    <div class="sidebar">
+        <h3>Мои персонажи</h3>
+        <button id="add-char-btn" onclick="addCharacter()">+ Новый персонаж</button>
+        <div id="characters-list"></div>
+        
+        <h3>Загрузка / Сохранение</h3>
+        <button onclick="exportCharacter()">Выгрузить (JSON)</button>
+        <input type="file" id="import-file" accept=".json" style="display:none;" onchange="importCharacter(event)">
+        <button onclick="document.getElementById('import-file').click()">Загрузить (JSON)</button>
+    </div>
 
-        <!-- Центральная колонка -->
-        <section class="panel">
-        <h2>Добродетели</h2>
-        <div class="item-row">
-            <label>Совесть</label>
-            <input type="number" id="virtue-conscience" min="0" max="5" value="2" oninput="calculateVirtues()">
-        </div>
-        <div class="item-row">
-            <label>Хладнокровие</label>
-            <input type="number" id="virtue-cold-blood" min="0" max="5" value="2" oninput="calculateVirtues()">
-        </div>
-        <div class="item-row">
-            <label>Самоконтроль</label>
-            <input type="number" id="virtue-self-control" min="0" max="5" value="2" oninput="calculateVirtues()">
-        </div>
-        <div class="item-row">
-            <label>Смелость</label>
-            <input type="number" id="virtue-courage" min="0" max="5" value="2" oninput="calculateVirtues()">
-        </div>
-            
-            <div class="calc-info">
-                <label>Праведность (Расчет): <span id="righteousness">0</span></label>
-                <label>Стрессоустойчивость (Расчет): <span id="stress-resist">0</span></label>
+    <main>
+        <!-- ВКЛАДКА: ЛИСТ ПЕРСОНАЖА -->
+        <div id="sheet" class="tab-content active">
+            <div class="grid-container">
+                <!-- Левая колонка -->
+                <section class="panel">
+                    <h2>Качества</h2>
+                    <div id="qualities-list"></div>
+                    
+                    <h2>Навыки и Знания</h2>
+                    <div id="skills-list"></div>
+                </section>
+
+                <!-- Центральная колонка -->
+                <section class="panel">
+                    <h2>Добродетели</h2>
+                    <div class="item-row">
+                        <label>Совесть</label>
+                        <input type="number" id="virtue-conscience" min="0" max="5" value="2" oninput="calculateVirtues()">
+                    </div>
+                    <div class="item-row">
+                        <label>Хладнокровие</label>
+                        <input type="number" id="virtue-cold-blood" min="0" max="5" value="2" oninput="calculateVirtues()">
+                    </div>
+                    <div class="item-row">
+                        <label>Самоконтроль</label>
+                        <input type="number" id="virtue-self-control" min="0" max="5" value="2" oninput="calculateVirtues()">
+                    </div>
+                    <div class="item-row">
+                        <label>Смелость</label>
+                        <input type="number" id="virtue-courage" min="0" max="5" value="2" oninput="calculateVirtues()">
+                    </div>
+                    
+                    <div class="calc-info">
+                        <label>Праведность (Расчет): <span id="righteousness">0</span></label>
+                        <label>Стрессоустойчивость (Расчет): <span id="stress-resist">0</span></label>
+                    </div>
+
+                    <h2>Проклятые Силы</h2>
+                    <div id="powers-list"></div>
+                </section>
+
+                <!-- Правая колонка -->
+                <section class="panel">
+                    <h2>Здоровье и Раны</h2>
+                    <table id="wounds-table">
+                        <thead>
+                            <tr>
+                                <th>Часть тела</th>
+                                <th>Защита (Л/Т)</th>
+                                <th>Легкие</th>
+                                <th>Тяжелые</th>
+                                <th>Сумма</th>
+                            </tr>
+                        </thead>
+                        <tbody id="wounds-body">
+                            <!-- Заполняется через JS -->
+                        </tbody>
+                    </table>
+
+                    <h2>Ресурсы</h2>
+                    <div class="bars">
+                        <label>Стресс: <input type="range" id="stress" min="0" max="20" value="0" oninput="document.getElementById('stress-val').innerText = this.value"></label> <span id="stress-val">0</span>
+                    </div>
+                </section>
             </div>
+        </div>
 
-            <h2>Проклятые Силы</h2>
-            <select id="powers">
-                <option value="none">-- Выберите силу --</option>
-                <option value="beast">Звериная Сила</option>
-                <option value="night">Плач Ночницы</option>
-                <option value="stone">Каменная Плоть</option>
-            </select>
-            <div id="power-desc"></div>
-        </section>
+        <!-- ВКЛАДКА: БРОСОК КУБИКОВ -->
+        <div id="dice" class="tab-content">
+            <section class="panel">
+                <h2>Испытания (d10)</h2>
+                <p>Выберите характеристики. Пул кубиков = Качество + Навык/Знание. Сложность 6. 10 = 2 успеха.</p>
+                
+                <div class="dice-builder">
+                    <label>Качество (или 0):
+                        <select id="dice-quality">
+                            <option value="0">— Не выбрано —</option>
+                        </select>
+                    </label>
+                    
+                    <label>Навык / Знание (или 0):
+                        <select id="dice-skill">
+                            <option value="0">— Не выбрано —</option>
+                        </select>
+                    </label>
 
-        <!-- Правая колонка -->
-        <section class="panel">
-            <h2>Здоровье и Раны</h2>
-            <table id="wounds-table">
-                <thead>
-                    <tr>
-                        <th>Часть тела</th>
-                        <th>Защита (Л/Т)</th>
-                        <th>Легкие</th>
-                        <th>Тяжелые</th>
-                        <th>Сумма</th>
-                    </tr>
-                </thead>
-                <tbody id="wounds-body">
-                    <!-- Заполняется через JS -->
-                </tbody>
-            </table>
+                    <label>Добавить кубов вручную: <input type="number" id="dice-extra" value="0" min="0"></label>
+                    <label>Сложность проверки: <input type="number" id="dice-diff" value="6" min="2" max="10"></label>
+                    
+                    <button onclick="rollDice()" class="roll-btn">Бросить кубики!</button>
+                </div>
 
-            <h2>Ресурсы</h2>
-            <div class="bars">
-                <label>Человечность: <input type="range" id="humanity" min="0" max="10"></label>
-                <label>Стресс: <input type="range" id="stress" min="0" max="10"></label>
-            </div>
-        </section>
+                <div id="dice-results" class="dice-output"></div>
+            </section>
+        </div>
+
+        <!-- ВКЛАДКА: СПРАВОЧНИК -->
+        <div id="lore" class="tab-content">
+            <section class="panel">
+                <h2>Краткий справочник</h2>
+                <div class="lore-content">
+                    <h3>Черное Солнце и Проклятые</h3>
+                    <p>Триста лет назад произошла катастрофа. Мир изменился, и появилась Скверна. Проклятые — это бывшие люди или животные, сломленные горем, виной или яростью, в которых проснулась чудовищная сила.</p>
+                    
+                    <h3>Голос Проклятья</h3>
+                    <p>Внутренний ропот, говорящий на языке инстинктов: «Возьми», «Убей». Слышен всем Проклятым. Подавление Голоса требует проверок Самоконтроля.</p>
+
+                    <h3>Типажи (Пороки)</h3>
+                    <ul>
+                        <li><b>Гнев (Волколак):</b> Сложность проверок ярости увеличена на 2.</li>
+                        <li><b>Лень (Водяной):</b> Штраф -1 к кубам на внезапные действия.</li>
+                        <li><b>Малодушие (Кикимора):</b> Сложность проверок смелости повышена на 2.</li>
+                    </ul>
+
+                    <h3>Добродетели</h3>
+                    <p><b>Праведность</b> = (Совесть + Самоконтроль) + 2. Если падает до 0 — персонаж дичает.<br>
+                    <b>Стрессоустойчивость</b> = (Хладнокровие + Смелость) + 2.</p>
+                    
+                    <p style="color: #888; font-style: italic;">Полный справочник смотрите в PDF-книге правил.</p>
+                </div>
+            </section>
+        </div>
     </main>
 
     <script src="script.js"></script>
