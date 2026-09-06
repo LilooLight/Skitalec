@@ -22,7 +22,6 @@ function addCharacter() {
         wounds: {},
         stress: 0
     };
-    // Инициализация пустыми значениями
     qualitiesData.forEach(q => newChar.qualities[q] = 0);
     skillsData.forEach(s => newChar.skills[s] = 0);
     bodyParts.forEach(b => newChar.wounds[b] = { light: 0, heavy: 0 });
@@ -36,7 +35,12 @@ function addCharacter() {
 
 function deleteCharacter(id) {
     characters = characters.filter(c => c.id !== id);
-    if(currentCharId === id) currentCharId = characters.length > 0 ? characters[0].id : null;
+    
+    // Исправление: если удалили текущего персонажа, переключаемся на первого оставшегося
+    if(currentCharId === id) {
+        currentCharId = characters.length > 0 ? characters[0].id : null;
+    }
+    
     saveAll();
     renderSidebar();
     renderSheet();
@@ -70,6 +74,8 @@ function getCurrentChar() {
 
 function renderSheet() {
     const char = getCurrentChar();
+    
+    // Если персонаж не найден, показываем заглушку
     if (!char) {
         document.getElementById('sheet').innerHTML = '<p style="text-align:center; padding: 50px;">Создайте нового персонажа слева.</p>';
         return;
@@ -140,9 +146,6 @@ function updateWounds(part, type, value) {
     if (char) {
         char.wounds[part][type] = parseInt(value) || 0;
         saveAll();
-        // Обновляем только сумму
-        const row = document.querySelector(`#wounds-body tr:has(td:nth-child(1):contains('${part}'))`);
-        // Просто перерисовываем для простоты
         renderSheet(); 
     }
 }
@@ -190,11 +193,9 @@ function importCharacter(event) {
     reader.onload = (e) => {
         try {
             const importedChar = JSON.parse(e.target.result);
-            // Проверяем базовую структуру
             if (!importedChar.id || !importedChar.qualities) {
                 throw new Error("Неверный формат файла");
             }
-            // Даем новый ID, чтобы не перезаписать текущего
             importedChar.id = Date.now(); 
             characters.push(importedChar);
             currentCharId = importedChar.id;
@@ -246,18 +247,17 @@ function rollDice() {
         return;
     }
 
-    // Бросаем кубики
     let results = [];
     let successes = 0;
     let tensCount = 0;
     let onesCount = 0;
 
     for (let i = 0; i < poolSize; i++) {
-        let roll = Math.floor(Math.random() * 10) + 1; // d10
+        let roll = Math.floor(Math.random() * 10) + 1;
         results.push(roll);
         
         if (roll === 10) {
-            successes += 2; // Десятка = 2 успеха
+            successes += 2;
             tensCount++;
         } else if (roll >= difficulty) {
             successes += 1;
@@ -266,7 +266,6 @@ function rollDice() {
         }
     }
 
-    // Отрисовка результата
     const output = document.getElementById('dice-results');
     output.innerHTML = `
         <div class="pool-info">Пул кубиков: <b>${poolSize}d10</b> | Сложность: <b>${difficulty}</b></div>
@@ -290,15 +289,19 @@ function openTab(tabId) {
 
 // --- ЗАПУСК ---
 window.onload = () => {
-    if (characters.length === 0) {
-        // Если список пуст, создаем первого персонажа
-        addCharacter();
-    } else {
-        // Если не выбран текущий, выбираем первого
-        if (!currentCharId) currentCharId = characters[0].id;
+    // Исправление: проверяем, существует ли текущий ID, если нет - берем первого
+    if (characters.length > 0) {
+        const exists = characters.find(c => c.id === currentCharId);
+        if (!exists) {
+            currentCharId = characters[0].id;
+        }
         saveAll();
-        renderSidebar();
-        renderSheet();
+    } else {
+        // Если список пуст, создаем первого
+        addCharacter();
     }
+
+    renderSidebar();
+    renderSheet();
     populateDiceSelects();
 };
